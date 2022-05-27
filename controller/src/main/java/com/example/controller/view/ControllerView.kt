@@ -44,17 +44,29 @@ class ControllerView @JvmOverloads constructor(
 
 
     init {
-        for (i in 0..10) {
-            val start = i * 3000L
-            val end = (i + 1) * 3000L
-            addImage(ImageModel(start, end))
-        }
+//        for (i in 0..10) {
+//            val start = i * 3000L
+//            val end = (i + 1) * 3000L
+//            addImage(ImageModel(start, end))
+//        }
     }
 
     fun addImage(imageModel: ImageModel) {
-        val image = Image(imageModel)
+        val image = Image(context,imageModel,object :Image.Callback{
+            override fun getNextImage(image: Image): ImageModel? {
+                val index = listImage.indexOf(image)
+                if (index >= 0 && index < listImage.size - 1){
+                    return listImage[index + 1].imageModel
+                }
+                return null
+            }
+
+            override fun invalidate() {
+                postInvalidate()
+            }
+        })
         image.updateTime()
-        image.updateHeight(height)
+        image.setViewSize(width,height)
         image.updateMatrix(allMatrix)
         listImage.add(image)
         updateTime()
@@ -63,7 +75,7 @@ class ControllerView @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
-        for (image in listImage) image.updateHeight(height)
+        for (image in listImage) image.setViewSize(width,height)
         timeLine.updateSize(width,height)
         updateMatrix()
     }

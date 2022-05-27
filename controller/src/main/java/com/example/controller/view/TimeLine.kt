@@ -39,14 +39,14 @@ class TimeLine(var duration: Long) {
         val value = rectDraw.width() / duration
         var count = 0
         while (true) {
-            if (value * spaceTime < minSpace) {
-                spaceTime = if (spaceTime <= 4000) {
+            spaceTime = if (value * spaceTime < minSpace) {
+                if (spaceTime <= 4000) {
                     spaceTime * 2
                 } else {
                     spaceTime + 4000
                 }
             } else if (value * spaceTime > maxSpace) {
-                spaceTime = if (spaceTime <= 4000) {
+                if (spaceTime <= 4000) {
                     spaceTime / 2
                 } else {
                     spaceTime - 4000
